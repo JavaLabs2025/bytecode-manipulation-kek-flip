@@ -8,6 +8,7 @@ import java.util.jar.JarFile;
 
 import org.example.analyzer.visitor.ABCVisitor;
 import org.example.analyzer.visitor.InheritanceVisitor;
+import org.example.analyzer.visitor.OverrideVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -15,6 +16,7 @@ public class Analyzer {
     private Map<String, ClassMetrics> classMetircsMap = new HashMap<>();
 
     private InheritanceVisitor inheritanceVisitor = new InheritanceVisitor();
+    private OverrideVisitor overrideVisitor = new OverrideVisitor();
 
     public JarMetrics analyze(String jarPath) {
         try (JarFile jar = new JarFile(jarPath)) {
@@ -37,6 +39,7 @@ public class Analyzer {
 
     private void processClass(ClassReader reader) {
         reader.accept(inheritanceVisitor, 0);
+        reader.accept(overrideVisitor, 0);
 
         ClassNode node = new ClassNode();
         reader.accept(node, 0);
@@ -49,6 +52,7 @@ public class Analyzer {
         classMetrics.assignments = abcVisitor.getAssignments();
         classMetrics.branches = abcVisitor.getBranches();
         classMetrics.conditionals = abcVisitor.getConditionals();
+
         classMetrics.overrides = (int) node.fields.stream().filter((fieldNode) -> {
             if (fieldNode.visibleAnnotations == null) {
                 return false;
@@ -57,6 +61,7 @@ public class Analyzer {
             return fieldNode.visibleAnnotations.stream()
                     .anyMatch((annotationNode) -> annotationNode.desc.equals("Ljava/lang/Override;"));
         }).count();
+
         classMetrics.fields = node.fields.size();
 
         classMetircsMap.put(node.name, classMetrics);
@@ -85,7 +90,7 @@ public class Analyzer {
                 inheritanceVisitor.getMaxInheritanceDepth(),
                 inheritanceVisitor.getAvgInheritanceDepth(),
                 ABC,
-                Double.valueOf(totalOverrides) / classMetircsMap.size(),
+                overrideVisitor.getAvgMethodOverrides(),
                 Double.valueOf(totalFields) / classMetircsMap.size());
     }
 }

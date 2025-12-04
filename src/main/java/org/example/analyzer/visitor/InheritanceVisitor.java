@@ -8,7 +8,7 @@ import java.util.Map;
 import org.objectweb.asm.ClassVisitor;
 
 public class InheritanceVisitor extends ClassVisitor {
-    private class ClassInfo {
+    private static class ClassInfo {
         String name;
         String superName;
 
@@ -38,6 +38,10 @@ public class InheritanceVisitor extends ClassVisitor {
             }
 
             ClassInfo classInfo = classesInfoMap.get(currentClass);
+            if (classInfo == null) {
+                break;
+            }
+
             if (classInfo.inharitanceDepth > -1) {
                 depth += classInfo.inharitanceDepth;
                 break;
