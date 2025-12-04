@@ -62,11 +62,9 @@ public class Analyzer {
         Long totalBranches = Long.valueOf(0);
         Long totalConditions = Long.valueOf(0);
 
-        Integer totalOverrides = 0;
         Integer totalFields = 0;
 
         for (ClassMetrics classMetrics : classMetircsMap.values()) {
-            totalOverrides += classMetrics.overrides;
             totalFields += classMetrics.fields;
             totalAssigments += classMetrics.assignments;
             totalBranches += classMetrics.branches;
