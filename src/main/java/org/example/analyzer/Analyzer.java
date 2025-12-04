@@ -52,16 +52,6 @@ public class Analyzer {
         classMetrics.assignments = abcVisitor.getAssignments();
         classMetrics.branches = abcVisitor.getBranches();
         classMetrics.conditionals = abcVisitor.getConditionals();
-
-        classMetrics.overrides = (int) node.fields.stream().filter((fieldNode) -> {
-            if (fieldNode.visibleAnnotations == null) {
-                return false;
-            }
-
-            return fieldNode.visibleAnnotations.stream()
-                    .anyMatch((annotationNode) -> annotationNode.desc.equals("Ljava/lang/Override;"));
-        }).count();
-
         classMetrics.fields = node.fields.size();
 
         classMetircsMap.put(node.name, classMetrics);
