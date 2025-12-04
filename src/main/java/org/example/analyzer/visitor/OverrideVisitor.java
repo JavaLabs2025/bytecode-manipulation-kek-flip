@@ -20,12 +20,12 @@ public class OverrideVisitor extends ClassVisitor {
 
     static class Method {
         final String name;
-        final String argumentTypes;
+        final String params;
         boolean overrideFound = false;
 
-        Method(String name, String argumentTypes) {
+        Method(String name, String params) {
             this.name = name;
-            this.argumentTypes = argumentTypes;
+            this.params = params;
         }
     }
 
@@ -79,7 +79,8 @@ public class OverrideVisitor extends ClassVisitor {
                 }
 
                 for (Method interfaceMethod : interfaceMethods) {
-                    if (method.equals(interfaceMethod)) {
+                    if (method.name.equals(interfaceMethod.name)
+                            && method.params.equals(interfaceMethod.params)) {
                         result++;
                         method.overrideFound = true;
                     }
@@ -106,7 +107,8 @@ public class OverrideVisitor extends ClassVisitor {
             }
 
             for (Method superMethod : superMethods) {
-                if (method.equals(superMethod)) {
+                if (method.name.equals(superMethod.name)
+                        && method.params.equals(superMethod.params)) {
                     result++;
                     method.overrideFound = true;
                 }
