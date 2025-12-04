@@ -11,7 +11,7 @@ import org.example.analyzer.JarMetrics;
 
 public class App {
     private static final String defaultJar = "src/main/resources/sample.jar";
-    private static final String defaultOutput = null;
+    private static final String defaultOutput = "./output.json";
 
     public static void main(String[] args) throws IOException {
         String jar = defaultJar;
