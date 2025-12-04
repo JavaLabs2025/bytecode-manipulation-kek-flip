@@ -33,7 +33,7 @@ public class InheritanceVisitor extends ClassVisitor {
         Integer depth = 0;
 
         while (true) {
-            if (currentClass.equals("java/lang/Object")) {
+            if (currentClass == null) {
                 break;
             }
 
@@ -76,10 +76,6 @@ public class InheritanceVisitor extends ClassVisitor {
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        if (superName == null) {
-            return;
-        }
-
         classesInfoMap.putIfAbsent(name, new ClassInfo(name, superName));
     }
 }
